@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  # maria_db:
+  #   image: mariadb:10.7
+  #   restart: always
+  #   ports:
+  #     - "3306:3306"
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: password
+  #     MYSQL_DATABASE: google_news_scraper
+  #   volumes:
+  #     - ./db_mariadb:/var/lib/mysql
+
+  # mysql_db:
+  #   image: mysql:8.0
+  #   cap_add:
+  #     - SYS_NICE
+  #   restart: always
+  #   command: --default-authentication-plugin=mysql_native_password
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=password
+  #     - MYSQL_DATABASE=google_news_scraper
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - ./db-mysql/conf.d:/etc/mysql/conf.d
+  #     - ./db-mysql/logs:/logs
+  #     - /usr/local/var/mysql:/var/lib/mysql
+
+  # postgres_db:
+  #   image: postgres:14.1-alpine
+  #   restart: always
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres
+  #   ports:
+  #     - '5432:5432'
+  #   volumes:
+  #     - ./db-postgres:/var/lib/postgresql/data
+
+  mongodb:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+  gnews_scraper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - mongodb
+      # - maria_db
+      # - mysql_db
+      # - postgres_db
